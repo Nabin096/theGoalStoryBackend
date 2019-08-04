@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>Create BLogs</title>
+    <script src="{% static 'SharedExperiences/js/addTag.js' %}"></script>
+    <script src="{% static 'SharedExperiences/js/wordCheck.js' %}"></script>
+    <script src="{% static 'SharedExperiences/js/imageCheck.js' %}"></script>
+    <script src="{% static 'SharedExperiences/js/blogValidateForm.js' %}"></script>
+</head>
+<body>
+<h1>Hello Vincent</h1>
+<div class="row">
+    <div class="col-lg-6" style="padding:40px">
+        <div class="row container">
+
+            <form action="{% url 'blogsTitleCreate' %}" method="post" name="addTitleForm" onsubmit="return validateForm(this)">
+                {% csrf_token %}
+                <input type="text" name="title" placeholder="Enter a title">
+                <button type="submit">Add Title</button>
+            </form>
+        </div>
+        <br>
+        <br>
+        <form id="elementsForm" action="{% url 'blogsCreate' %}" method="post" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <div class ="row container">
+                <select name='tag' onchange='createTag(this)'>
+                    <option>Please select the element</option>
+                    <option value="Textarea">
+                        Paragraph
+                    </option>
+                    <option value="Header">
+                        Header
+                    </option>
+                    <option value="Image">
+                        Image
+                    </option>
+                </select>
+            </div>
+            <br>
+            <br>
+            <div class ="row">
+                <input  type="text" name="innerHTML1" id="headerbox" onkeypress="wordCheck(this)" style="visibility: hidden;">
+            </div>
+            <div>
+                <input type="file" name="img" id="imagebox"  onchange="imageCheck(this)" style="visibility: hidden;">
+            </div>
+            <div>
+                <textarea name="innerHTML2" id="paragraphbox" onkeypress="wordCheck(this)" style="visibility: hidden;"></textarea>
+            </div>
+            <div>
+                <button type="submit" disabled id="submit">Add</button>
+            </div>
+
+
+
+        </form>
+
+
+
+    </div>
+    <div class="col-lg-6">
+            {{error}}
+        <div>
+            {% for element in blogPreview %}
+            <div>{{element.innerHTML}}</div>
+                {% ifequal element.tag 'Image' %}
+                        <img src="{{element.img.url}}" style="height:300px ; width:80%">
+
+
+                {% endifequal %}
+
+            {% endfor %}
+
+
+
+        </div>
+
+    </div>
+</div>
+<br>
+<br>
+<center>
+    <form action="{% url 'discardBlog' %}" method="post">
+            {% csrf_token %}
+             <div>
+                <button type="submit">Discard</button>
+            </div>
+
+        </form>
+</center>
+<br>
+<br>
+<center>
+    <form action="{% url 'blogsSubmit' %}" method="post">
+            {% csrf_token %}
+             <div>
+                 <select name="genre">
+                     <option value="NA">----Select a category-------</option>
+                    <option value="Letstalkfootball">Lets talk football</option>
+                    <option value="Youngguns">Young guns</option>
+                    <option value="Prodigiestolegends">Prodigies to Legends</option>
+                    <option value="OnceUponatimeinIndianFootball">Once upon a time in Indian football</option>
+                    <option value="Leagueoflegends">League of Legends</option>
+                </select>
+                <button type="submit">Finish</button>
+            </div>
+
+        </form>
+</center>
+
+
+
+</body>
+</html>
